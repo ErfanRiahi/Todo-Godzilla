@@ -1,0 +1,43 @@
+header {
+  background-color: antiquewhite;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 -5px 20px gray;
+  margin-bottom: 20px;
+}
+
+nav {
+  padding: 20px;
+}
+
+.item {
+  display: inline-block;
+  position: relative;
+  margin: 0 15px;
+  text-decoration: none;
+  color: black;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.item:hover {
+  color: brown;
+}
+
+.item::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: brown;
+  transform-origin: bottom right;
+  transition: transform 0.2s ease-out;
+}
+
+.item:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}

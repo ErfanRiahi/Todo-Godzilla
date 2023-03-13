@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+}
+
+main {
+  /* header height = 61px + 20px (margin)
+  footer height = 50px + 20px (margin) 
+  header height + footer height = 151px*/
+  min-height: calc(100vh - 151px);
+  width: 80%;
+  margin: 0 auto;
+}

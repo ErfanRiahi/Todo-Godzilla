@@ -1,0 +1,66 @@
+.search-add {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+
+.searchMember {
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.addMember {
+  border: 0;
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addMember:hover {
+  background-color: antiquewhite;
+}
+
+/*************** member ***************/
+.members {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
+.member {
+  width: 350px;
+}
+
+.member-details {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  gap: 10px;
+}
+
+.field-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 80%;
+}
+
+@media (width < 580px) {
+  .searchMember {
+    margin: 0 auto;
+  }
+  .addMember {
+    margin: 20px auto;
+    width: 200px;
+  }
+}
