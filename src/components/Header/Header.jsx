@@ -5,15 +5,38 @@ export const Header = () => {
   return (
     <header>
       <nav>
-        <NavLink to={"/"} className="item">
-          Home
-        </NavLink>
-        <NavLink to={"/history"} className="item">
-          History
-        </NavLink>
-        <NavLink to={"/members"} className="item">
-          Members
-        </NavLink>
+        <ul>
+          <li className="item">
+            <NavLink
+              to={"/"}
+              style={({ isActive }) =>
+                isActive ? { color: "brown" } : undefined
+              }
+            >
+              Home
+            </NavLink>
+          </li>
+          <li className="item">
+            <NavLink
+              to={"/history"}
+              style={({ isActive }) =>
+                isActive ? { color: "brown" } : undefined
+              }
+            >
+              History
+            </NavLink>
+          </li>
+          <li className="item">
+            <NavLink
+              to={"/members"}
+              style={({ isActive }) =>
+                isActive ? { color: "brown" } : undefined
+              }
+            >
+              Members
+            </NavLink>
+          </li>
+        </ul>
       </nav>
     </header>
   );

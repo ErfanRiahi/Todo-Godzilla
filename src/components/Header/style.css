@@ -10,6 +10,10 @@ nav {
   padding: 20px;
 }
 
+ul {
+  margin: 0;
+}
+
 .item {
   display: inline-block;
   position: relative;
