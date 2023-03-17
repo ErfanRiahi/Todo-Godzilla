@@ -1,66 +1,102 @@
-import { faCircleUser, faLightbulb } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import "../../generalStyle.css";
+import { MemberInfo } from "./MemberInfo";
 import "./style.css";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  bgcolor: "background.paper",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
+
 export const Members = () => {
+  const [open, setOpen] = useState(false);
+  const [skill, setSkill] = useState([]);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  const skills = [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "PHP",
+    "Python",
+    "Ruby",
+    "TypeScript",
+    "Java",
+    "C#",
+    "Go",
+    "Swift",
+    "Kotlin",
+    "Java",
+    "C++",
+    "PHP",
+    "Go",
+    "Rust",
+    "Lua",
+    "Perl",
+    "R",
+    "Scala",
+  ];
+
   return (
     <main>
       <section className="search-add">
-        <input
-          type="text"
-          name="search"
-          id="search"
-          placeholder="Search members..."
+        <TextField
+          id="outline-required"
+          label="Search member..."
           className="searchMember"
         />
-        <button className="addMember">Add member</button>
+        <Button variant="contained" onClick={handleOpen} className="addMember">
+          Add member
+        </Button>
+        <Modal open={open} onClose={handleClose}>
+          <Box sx={style} autoComplete="off">
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              textAlign="center"
+              marginBottom={2}
+            >
+              Member Information
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "auto auto",
+                gap: "20px",
+              }}
+              className="memberInfo"
+              autoComplete="off"
+            >
+              <TextField required id="outlined-required" label="Full name" />
+              <TextField id="outline-required" label="Age" />
+              <TextField id="outline-required" label="LinkedIn username" />
+              <TextField id="outline-required" label="Github username" />
+            </Box>
+          </Box>
+        </Modal>
       </section>
 
       <section className="members">
-        <div className="member">
-          <div className="member-details">
-            <FontAwesomeIcon icon={faCircleUser} />
-            <FontAwesomeIcon icon={faLightbulb} />
-            <span>
-              <strong>Name:</strong> Erfan Riahi
-            </span>
-            <span className="field">
-              <strong>Skills:</strong>
-              <div className="field-detail">
-                <span>HTML</span> <span>CSS3</span> <span>JavaScript</span>
-                <span>JavaScript</span>
-                <span>JavaScript</span>
-                <span>JavaScript</span>
-              </div>
-            </span>
-            <span>
-              <strong>Age:</strong> 21
-            </span>
-            <span className="field">
-              <strong>Language(s):</strong>{" "}
-              <div className="field-detail">
-                <span>Persian</span> <span>English</span>
-              </div>
-            </span>
-            <span>
-              <strong>LinkedIn:</strong> ERN401
-            </span>
-            <span>
-              <strong>Github:</strong> ErfanRiahi
-            </span>
-          </div>
-          <div className="field">
-            <span>
-              <strong>Tasks:</strong>
-            </span>
-            <div className="field-detail">
-              <span>task1</span>
-              <span>task2</span>
-              <span>task3</span>
-            </div>
-          </div>
-        </div>
+        <MemberInfo />
       </section>
     </main>
   );

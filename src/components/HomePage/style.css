@@ -1,0 +1,26 @@
+.add-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.addNewTask-btn {
+  border: none;
+  padding: 15px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.addNewTask-btn:hover {
+  background-color: antiquewhite;
+}
+
+.total {
+  font-size: 1.3rem;
+  background-color: #f0f0f0;
+  align-self: center;
+  padding: 14px;
+  border-radius: 5px;
+}
