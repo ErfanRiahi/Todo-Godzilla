@@ -1,10 +1,14 @@
-import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Modal,
   Paper,
@@ -13,10 +17,13 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import "../../generalStyle.css";
 import "./style.css";
+import { Tasks } from "./Tasks";
 
 const style = {
   position: "absolute",
@@ -35,18 +42,34 @@ export const Home = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [addTask, setAddTask] = useState(false);
+  const handleOpenAddTask = () => setAddTask(true);
+  const handleCloseAddTask = () => setAddTask(false);
+
   return (
     <main>
       <AvatarGroup
         max={6}
-        sx={{ display: "flex", justifyContent: "start", alignItems: "center" }}
+        sx={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          cursor: "pointer",
+          width: "fit-content",
+        }}
         onClick={handleOpen}
       >
-        <Avatar
-          alt="Erfan"
-          src="../../../src/assets/img/Erfan.jpg"
-          sx={{ width: 70, height: 70 }}
-        />
+        <Badge
+          color="primary"
+          badgeContent={"Admin"}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Avatar
+            alt="Erfan"
+            src="../../../src/assets/img/Erfan.jpg"
+            sx={{ width: 70, height: 70 }}
+          />
+        </Badge>
         <Avatar alt="1" src="../../../src/assets/img/1.jpg" />
         <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
         <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
@@ -69,26 +92,6 @@ export const Home = () => {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton>
-                      <Delete sx={{ color: "red" }} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton>
-                      <Delete sx={{ color: "red" }} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
@@ -96,100 +99,50 @@ export const Home = () => {
       </Modal>
 
       <div className="add-total">
-        <button className="addNewTask-btn">Add New Task</button>
+        <Button
+          variant="contained"
+          className="addNewTask-btn"
+          onClick={handleOpenAddTask}
+        >
+          Add new task
+        </Button>
+        <Dialog open={addTask} onClose={handleCloseAddTask}>
+          <DialogTitle>Task details</DialogTitle>
+          <DialogContent>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "auto auto",
+                gap: "20px",
+                marginTop: "10px",
+              }}
+              className="memberInfo"
+              autoComplete="off"
+            >
+              <TextField id="outline-required" label="Title" />
+              <TextField id="outline-required" label="Username" />
+            </Box>
+            <TextField
+              fullWidth
+              id="outline-required"
+              label="Describe (maximum line=5)"
+              multiline
+              maxRows={5}
+              sx={{ marginTop: "20px" }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAddTask}>Cancel</Button>
+            <Button>Add task</Button>
+          </DialogActions>
+        </Dialog>
         <div className="total">Total tasks: 3</div>
       </div>
 
       <TableContainer component={Paper} sx={{ marginTop: "40px" }}>
         <Table sx={{ width: "100%" }}>
           <TableBody>
-            <TableRow>
-              <TableCell align="center" width="50px">
-                1
-              </TableCell>
-              <TableCell>
-                <h2>Header</h2>
-                <p>design and add header</p>
-                <AvatarGroup
-                  max={6}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar alt="1" src="../../../src/assets/img/1.jpg" />
-                  <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
-                  <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
-                </AvatarGroup>
-              </TableCell>
-              <TableCell>
-                <IconButton aria-label="delete">
-                  <Edit sx={{ color: "blue" }} />
-                </IconButton>
-                <IconButton>
-                  <Delete sx={{ color: "red" }} />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center" width="50px">
-                2
-              </TableCell>
-              <TableCell>
-                <h2>Footer</h2>
-                <p>design and add footer</p>
-                <AvatarGroup
-                  max={6}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar alt="1" src="../../../src/assets/img/1.jpg" />
-                  <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
-                  <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
-                </AvatarGroup>
-              </TableCell>
-              <TableCell>
-                <IconButton aria-label="delete">
-                  <Edit sx={{ color: "blue" }} />
-                </IconButton>
-                <IconButton>
-                  <Delete sx={{ color: "red" }} />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center" width="50px">
-                2
-              </TableCell>
-              <TableCell>
-                <h2>Footer</h2>
-                <p>design and add footer</p>
-                <AvatarGroup
-                  max={6}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar alt="1" src="../../../src/assets/img/1.jpg" />
-                  <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
-                  <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
-                </AvatarGroup>
-              </TableCell>
-              <TableCell>
-                <IconButton aria-label="delete">
-                  <Edit sx={{ color: "blue" }} />
-                </IconButton>
-                <IconButton>
-                  <Delete sx={{ color: "red" }} />
-                </IconButton>
-              </TableCell>
-            </TableRow>
+            <Tasks />
           </TableBody>
         </Table>
       </TableContainer>

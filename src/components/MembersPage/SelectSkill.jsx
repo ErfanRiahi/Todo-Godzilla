@@ -1,0 +1,41 @@
+import {
+  Autocomplete,
+  Chip,
+  FormControl,
+  FormHelperText,
+  TextField,
+} from "@mui/material";
+import { useState } from "react";
+import { skills } from "./skills";
+
+export const SelectSkill = (props) => {
+  const [selectedSkill, setSelectedSkill] = useState([]);
+  return (
+    <Autocomplete
+      multiple
+      id="skills"
+      value={selectedSkill?.value}
+      onChange={(event, newValue) => {
+        setSelectedSkill(newValue);
+        props.func(newValue);
+      }}
+      options={skills}
+      getOptionLabel={(option) => option}
+      renderInput={(params) => (
+        <TextField
+          error={
+            selectedSkill.length <= 3 || !selectedSkill.length ? true : false
+          }
+          helperText={
+            selectedSkill.length <= 3 || !selectedSkill.length
+              ? "Choose at least 3 skills"
+              : ""
+          }
+          {...params}
+          label="Skills"
+        />
+      )}
+      sx={{ marginTop: "15px" }}
+    />
+  );
+};

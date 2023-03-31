@@ -37,7 +37,7 @@
 }
 
 .card {
-  width: 450px;
+  width: 400px;
   margin: 0 auto;
   margin-bottom: 40px;
 }
@@ -48,6 +48,14 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
+.github-linkedIn {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-self: end;
+}
+
 .info {
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -67,6 +75,9 @@
     margin: 20px auto !important;
     width: 200px !important;
     height: 40px !important;
+  }
+  .members {
+    display: block;
   }
   .member-details {
     grid-template-columns: auto;
