@@ -1,3 +1,6 @@
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   Alert,
   Avatar,
@@ -41,7 +44,7 @@ import { SelectLanguage } from "./SelectLanguage";
 export const Members = () => {
   const [item, setItem] = useState({
     fullName: "",
-    age: 0,
+    birthday: "",
     linkedIn: "",
     github: "",
     skill: [],
@@ -74,7 +77,7 @@ export const Members = () => {
     setOpen(false);
     setItem({
       fullName: "",
-      age: 0,
+      birthday: "",
       email: "",
       password: "",
       linkedIn: "",
@@ -101,7 +104,7 @@ export const Members = () => {
   function addMember() {
     if (
       !item.fullName ||
-      !item.age ||
+      !item.birthday ||
       !item.email ||
       !item.password ||
       !item.github ||
@@ -112,6 +115,18 @@ export const Members = () => {
       handleClick();
 
     console.log(item);
+  }
+
+  // ******************** birthday ******************** //
+  function showDate(date) {
+    const newDate = new Date(date.toLocaleDateString()).toString().split(" ");
+    const birthday = [
+      newDate.slice(2, 3)[0],
+      newDate.slice(1, 2)[0],
+      newDate.slice(3, 4)[0],
+    ].join(" ");
+
+    setItem({ ...item, birthday: birthday });
   }
 
   return (
@@ -133,9 +148,9 @@ export const Members = () => {
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "auto auto",
+                gridTemplateColumns: "49% 49%",
                 gap: "10px",
-                marginTop: "10px",
+                marginTop: "15px",
               }}
               className="memberInfo"
               autoComplete="off"
@@ -147,7 +162,7 @@ export const Members = () => {
                 helperText={item.fullName ? "" : "Please enter your full name"}
                 onChange={(e) => setItem({ ...item, fullName: e.target.value })}
               />
-              <TextField
+              {/* <TextField
                 label="Age"
                 autoComplete="off"
                 error={
@@ -167,7 +182,12 @@ export const Members = () => {
                     : ""
                 }
                 onChange={(e) => setItem({ ...item, age: e.target.value })}
-              />
+              /> */}
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker onChange={(e) => showDate(e.$d)} label="Birthday" />
+              </LocalizationProvider>
+
               <TextField
                 label="Email"
                 autoComplete="off"
