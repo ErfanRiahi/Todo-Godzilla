@@ -26,20 +26,32 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
 } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { useState } from "react";
 import styled from "styled-components";
+import { SelectLanguage } from "./SelectLanguage";
+import { SelectProfileImage } from "./SelectProfileImage";
+import { SelectSkill } from "./SelectSkill";
 
 // const Item = styled(Paper)(({ theme }) => ({
 //   backgroundColor: "#fff",
 //   textAlign: "center",
 // }));
 
-export const MemberInfo = (item, setItem) => {
-  const github = "ErfanRiahi";
-  const linkedIn = "erfan-riahi";
-  const language = ["Persian", "English", "French"];
-  const skills = ["HTML", "CSS", "JavaScript", "react"];
+export const MemberInfo = (props) => {
+  const [item, setItem] = useState(props.props.member);
+  const fullName = `${item.firstName} ${item.lastName}`;
+  console.log(fullName);
+  // console.log(props);
+  // console.log(members.props);
+  // const github = "ErfanRiahi";
+  // const linkedIn = "erfan-riahi";
+  // const language = ["Persian", "English", "French"];
+  // const skills = ["HTML", "CSS", "JavaScript", "react"];
   const tasks = [
     { title: "design header", completed: false },
     { title: "complete home page", completed: true },
@@ -50,6 +62,25 @@ export const MemberInfo = (item, setItem) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // ******************** Edit dialog ******************** //
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  // ******************** birthday ******************** //
+  function showDate(date) {
+    const newDate = new Date(date).toString().split(" ");
+    const birthday = [
+      newDate.slice(2, 3)[0],
+      newDate.slice(1, 2)[0],
+      newDate.slice(3, 4)[0],
+    ].join(" ");
+    return birthday;
+  }
+
+  const [valueOfDate, setValueOfDate] = useState(dayjs(item.birthday));
   return (
     <Card className="card">
       <CardContent
@@ -77,8 +108,11 @@ export const MemberInfo = (item, setItem) => {
         ) : (
           <Lightbulb sx={{ fontSize: "2.2rem", justifySelf: "end" }} />
         )}
-        <Typography variant="h6" sx={{ justifySelf: "center" }}>
-          {item.fullName ? item.fullName : "Erfan Riahi"}
+        <Typography
+          variant="h6"
+          sx={{ justifySelf: "center", whiteSpace: "noWrap" }}
+        >
+          {fullName ? fullName : "Unknown"}
         </Typography>
         <div className="github-linkedIn">
           <Tooltip title={item.github} arrow>
@@ -128,23 +162,27 @@ export const MemberInfo = (item, setItem) => {
               <Box sx={{ textAlign: "center" }}>
                 <Badge
                   color="primary"
-                  invisible={item.isAdmin ? false : false}
+                  invisible={item.isAdmin ? false : true}
                   badgeContent={"Admin"}
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
                   <Avatar
                     alt="profile-photo"
-                    src="../../../src/assets/img/Erfan.jpg"
+                    src={item.profileImage}
                     sx={{ width: 80, height: 80 }}
                   />
                 </Badge>
 
-                <Typography variant="h5" marginY={1}>
-                  Erfan Riahi
+                <Typography
+                  variant="h5"
+                  marginY={1}
+                  sx={{ whiteSpace: "noWrap" }}
+                >
+                  {fullName}
                 </Typography>
 
                 <Typography variant="h7" sx={{ width: "fit-content" }}>
-                  12 Apr 2000
+                  {showDate(item.birthday)}
                 </Typography>
               </Box>
 
@@ -152,7 +190,6 @@ export const MemberInfo = (item, setItem) => {
               <Box
                 sx={{
                   display: "grid",
-                  justifySelf: "end",
                   alignItems: "center",
                 }}
               >
@@ -160,19 +197,19 @@ export const MemberInfo = (item, setItem) => {
                   <Tooltip title="Email" arrow>
                     <Email />
                   </Tooltip>
-                  <Typography>erfanriahi90@gmail.com</Typography>
+                  <Typography>{item.email}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
                   <Tooltip title="Github" arrow>
                     <GitHub />
                   </Tooltip>
-                  <Typography>ErfanRiahi</Typography>
+                  <Typography>{item.github}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
                   <Tooltip title="LinkedIn" arrow>
                     <LinkedIn sx={{ color: "#0A66C2" }} />
                   </Tooltip>
-                  <Typography>erfan-riahi</Typography>
+                  <Typography>{item.linkedIn}</Typography>
                 </Box>
               </Box>
 
@@ -191,12 +228,12 @@ export const MemberInfo = (item, setItem) => {
                 }}
               >
                 <Tooltip
-                  title={language.length > 1 ? "Languages" : "Language"}
+                  title={item.language.length > 1 ? "Languages" : "Language"}
                   arrow
                 >
                   <Language sx={{ fontSize: "2rem", marginRight: "10px" }} />
                 </Tooltip>
-                {language.map((lan, index) => {
+                {item.language.map((lan, index) => {
                   return (
                     <Typography
                       key={index}
@@ -224,12 +261,15 @@ export const MemberInfo = (item, setItem) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Tooltip title={skills.length > 1 ? "Skills" : "Skill"} arrow>
+                <Tooltip
+                  title={item.skill.length > 1 ? "Skills" : "Skill"}
+                  arrow
+                >
                   <Construction
                     sx={{ fontSize: "2rem", marginRight: "10px" }}
                   />
                 </Tooltip>
-                {skills.map((skill, index) => {
+                {item.skill.map((skill, index) => {
                   return (
                     <Typography
                       key={index}
@@ -247,7 +287,7 @@ export const MemberInfo = (item, setItem) => {
                 })}
               </Box>
 
-              {/****************** Tasks ******************/}
+              {/* ***************** Tasks ***************** */}
               <Box
                 sx={{
                   display: "flex",
@@ -284,78 +324,114 @@ export const MemberInfo = (item, setItem) => {
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => props.func.deleteMember(item._id)}
+            >
               Delete
             </Button>
-            <Button variant="contained" color="success">
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleOpenEdit}
+            >
               Edit
             </Button>
           </DialogActions>
-        </Dialog>
-        {/* <Box
-          sx={{
-            display: "flex",
-            gridColumn: "1/span 2",
-            alignItems: "center",
-            gap: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <Tooltip title={language.length > 1 ? "Languages" : "Language"} arrow>
-            <Language sx={{ fontSize: "2rem", alignItems: "center" }} />
-          </Tooltip>
-          <Typography>{language.join(", ")}</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            gridColumn: "1/span 2",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <Tooltip title="Skills" arrow>
-            <Construction sx={{ fontSize: "2rem" }} />
-          </Tooltip>
-          <Typography>{skills.join(", ")}</Typography>
-        </Box>
-        <Divider
-          orientation="horizontal"
-          sx={{ gridColumn: "1/span 2", marginTop: "10px" }}
-        /> */}
+          <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth={true}>
+            {/* <LinearProgress
+              value={100}
+              variant={memberAdded ? "indeterminate" : "terminate"}
+            /> */}
+            <DialogTitle textAlign="center">Member Information</DialogTitle>
+            <DialogContent>
+              <SelectProfileImage func={{ item, setItem }} />
 
-        {/************ Tasks ************/}
-        {/* <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gridColumn: "1/span 2",
-            alignItems: "center",
-            gap: "10px",
-            marginTop: "10px",
-          }}
-        >
-          <Tooltip title="Tasks" arrow>
-            <Assignment sx={{ fontSize: "2rem" }} />
-          </Tooltip>
-          <Button variant="primary">
-            <Typography>Tasks</Typography>
-          </Button> */}
-        {/* {tasks.map((task, index) => (
-            <Typography
-              key={index}
-              sx={{
-                boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
-                padding: "7px",
-                borderRadius: "5px",
-                color: "white",
-              }}
-              backgroundColor={task.completed ? "green" : "rgb(255,80,80)"}
-            >
-              {task.title}
-            </Typography>
-          ))} */}
-        {/* </Box> */}
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "49% 49%",
+                  gap: "10px",
+                  marginTop: "15px",
+                }}
+                className="memberInfo"
+                autoComplete="off"
+              >
+                <TextField
+                  label="First name"
+                  value={item.firstName}
+                  autoComplete="off"
+                  error={item.firstName ? false : true}
+                  helperText={
+                    item.firstName ? "" : "Please enter your first name"
+                  }
+                  onChange={(e) =>
+                    setItem({ ...item, firstName: e.target.value })
+                  }
+                />
+                <TextField
+                  label="Last name"
+                  value={item.lastName}
+                  autoComplete="off"
+                  error={item.lastName ? false : true}
+                  helperText={
+                    item.lastName ? "" : "Please enter your last name"
+                  }
+                  onChange={(e) =>
+                    setItem({ ...item, lastName: e.target.value })
+                  }
+                />
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Birthday"
+                    value={valueOfDate}
+                    onChange={(e) => {
+                      setItem({ ...item, birthday: e.$d.toLocaleDateString() });
+                      setValueOfDate(e);
+                    }}
+                  />
+                </LocalizationProvider>
+
+                <TextField
+                  label="Email"
+                  value={item.email}
+                  autoComplete="off"
+                  type="email"
+                  error={item.email ? false : true}
+                  helperText={item.email ? "" : "Enter your email"}
+                  onChange={(e) => setItem({ ...item, email: e.target.value })}
+                />
+
+                <TextField
+                  label="Github username"
+                  value={item.github}
+                  autoComplete="off"
+                  error={item.github ? false : true}
+                  helperText={item.github ? "" : "Enter your github username"}
+                  onBlur={(e) => setItem({ ...item, github: e.target.value })}
+                />
+                <TextField
+                  label="LinkedIn username"
+                  value={item.linkedIn}
+                  autoComplete="off"
+                  error={item.linkedIn ? false : true}
+                  helperText={item.linkedIn ? "" : "Enter your linked username"}
+                  onBlur={(e) => setItem({ ...item, linkedIn: e.target.value })}
+                />
+              </Box>
+              <SelectLanguage func={{ item, setItem }} />
+              <SelectSkill func={{ item, setItem }} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseEdit}>Cancel</Button>
+              <Button onClick={() => props.func.editMember(item._id, item)}>
+                Edit
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Dialog>
       </CardContent>
     </Card>
   );

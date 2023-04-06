@@ -9,6 +9,7 @@ import { useState } from "react";
 import { skills } from "./skills";
 
 export const SelectSkill = (props) => {
+  const item = props.func.item;
   const [selectedSkill, setSelectedSkill] = useState([]);
   return (
     <Autocomplete
@@ -17,17 +18,17 @@ export const SelectSkill = (props) => {
       value={selectedSkill?.value}
       onChange={(event, newValue) => {
         setSelectedSkill(newValue);
-        props.func(newValue);
+        props.func.setItem({ ...item, skill: newValue });
       }}
       options={skills}
       getOptionLabel={(option) => option}
       renderInput={(params) => (
         <TextField
           error={
-            selectedSkill.length <= 3 || !selectedSkill.length ? true : false
+            selectedSkill.length < 3 || !selectedSkill.length ? true : false
           }
           helperText={
-            selectedSkill.length <= 3 || !selectedSkill.length
+            selectedSkill.length < 3 || !selectedSkill.length
               ? "Choose at least 3 skills"
               : ""
           }

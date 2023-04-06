@@ -3,6 +3,9 @@ import { TextField, Autocomplete } from "@mui/material";
 import { getAllLanguages } from "../../API/API";
 
 export const SelectLanguage = (props) => {
+  const item = props.func.item;
+
+  console.log(props);
   const [languages, setLanguages] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
@@ -29,7 +32,7 @@ export const SelectLanguage = (props) => {
       value={selectedLanguages?.value}
       onChange={(event, newValue) => {
         setSelectedLanguages(newValue);
-        props.func(newValue);
+        props.func.setItem({ ...item, language: newValue });
       }}
       options={languages}
       getOptionLabel={(option) => option}

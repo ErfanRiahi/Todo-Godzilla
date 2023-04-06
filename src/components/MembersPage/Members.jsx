@@ -3,8 +3,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   Alert,
-  Avatar,
-  Badge,
   Box,
   Button,
   Checkbox,
@@ -12,63 +10,54 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  Modal,
-  OutlinedInput,
+  LinearProgress,
   Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../../generalStyle.css";
 import { MemberInfo } from "./MemberInfo";
-// import FileBase64 from "react-file-base64";
 import "./style.css";
-import { createMember } from "../../API/API";
-import { SelectProfileImage } from "./SelectProfileImage";
 import {
-  Edit,
-  PhotoCamera,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+  createMember,
+  deleteMemberApi,
+  editMemberApi,
+  getAllMember,
+} from "../../API/API";
+import { SelectProfileImage } from "./SelectProfileImage";
 import { SelectSkill } from "./SelectSkill";
 import { SelectLanguage } from "./SelectLanguage";
+import { AppContexts } from "../../contexts/AppContexts";
 
 export const Members = () => {
+  const { user, setUser } = useContext(AppContexts);
   const [item, setItem] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     birthday: "",
     linkedIn: "",
     github: "",
     skill: [],
     language: [],
-    isAdmin: false,
     profileImage: "",
     tasks: [],
+    password: "",
   });
 
-  const setProfileImage = (data) => {
-    setItem({ ...item, profileImage: data });
-  };
-  const setLanguage = (data) => {
-    setItem({ ...item, language: data });
-  };
-  const setSkill = (data) => {
-    setItem({ ...item, skill: data });
-  };
-  // ******************** password textField ******************** //
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const [memberAdded, setMemberAdded] = useState(false);
+
+  const [allMembers, setAllMembers] = useState();
+  const [newMember, setNewMember] = useState();
+  useEffect(() => {
+    getAllMember().then((data) => {
+      setAllMembers(data.data);
+      setNewMember(data.data);
+    });
+  }, []);
+  // allMembers ? console.log(allMembers) : console.log("nothing");
 
   // ******************** Dialog ******************** //
   const [open, setOpen] = useState(false);
@@ -76,59 +65,78 @@ export const Members = () => {
   const handleClose = () => {
     setOpen(false);
     setItem({
-      fullName: "",
+      firstName: "",
+      lastName: "",
       birthday: "",
-      email: "",
       password: "",
       linkedIn: "",
       github: "",
       skill: [],
       language: [],
-      isAdmin: false,
       profileImage: "",
     });
   };
 
   // ******************** Snackbar ******************** //
-  const [state, setState] = useState({
+  const [snackBarState, setSnackBarState] = useState({
     openSnackbar: false,
   });
-  const { openSnackbar } = state;
+  const { openSnackbar } = snackBarState;
   const handleClick = () => {
-    setState({ openSnackbar: true });
+    setSnackBarState({ openSnackbar: true });
   };
 
   const handleCloseSnackbar = () => {
-    setState({ openSnackbar: false });
+    setSnackBarState({ openSnackbar: false });
   };
-  function addMember() {
+
+  // ******************** Add member ******************** //
+  const addMember = async () => {
+    // console.log(item);
     if (
-      !item.fullName ||
-      !item.birthday ||
-      !item.email ||
-      !item.password ||
+      !item.firstName ||
+      !item.lastName ||
       !item.github ||
       !item.linkedIn ||
       !item.language.length ||
       !item.skill.length
-    )
+    ) {
       handleClick();
+      return;
+    }
+    setMemberAdded(true);
+    // setItem({ ...item, password: Math.random().toString(36).slice(-8) });
 
-    console.log(item);
+    const newMember = await createMember(item);
+    if (newMember !== undefined) {
+      // console.log(newMember);
+      setAllMembers(newMember);
+      setMemberAdded(false);
+      handleOpenFinalThing();
+    }
+  };
+
+  // ******************** Delete member ******************** //
+  const deleteMember = async (id) => {
+    setAllMembers(await deleteMemberApi(id));
+  };
+
+  // ******************** Edit member ******************** //
+  const editMember = async (id, item) => {
+    // console.log(id, item);
+    setAllMembers(await editMemberApi(id, item));
+  };
+
+  // ******************** Show username and password ******************** //
+  const [finalThing, setFinalThing] = useState(false);
+  const handleOpenFinalThing = () => setFinalThing(true);
+  const handleCloseFinalThing = () => setFinalThing(false);
+  function showUsernamePassword() {
+    handleCloseFinalThing();
+    handleClose();
   }
 
-  // ******************** birthday ******************** //
-  function showDate(date) {
-    const newDate = new Date(date.toLocaleDateString()).toString().split(" ");
-    const birthday = [
-      newDate.slice(2, 3)[0],
-      newDate.slice(1, 2)[0],
-      newDate.slice(3, 4)[0],
-    ].join(" ");
-
-    setItem({ ...item, birthday: birthday });
-  }
-
+  // console.log(newMember);
   return (
     <main>
       <section className="search-add">
@@ -136,14 +144,46 @@ export const Members = () => {
           id="outline-required"
           label="Search member..."
           className="searchMember"
+          onInput={(e) => {
+            setNewMember(
+              allMembers.filter((member) => {
+                // `${member.firstName} ${member.lastName}`.includes(
+                //   e.target.value
+                // )
+                // console.log(
+                //   `${member.firstName} ${member.lastName}`.includes(
+                //     e.target.value
+                //   )
+                // );
+                return `${member.firstName} ${member.lastName}`.includes(
+                  e.target.value
+                );
+              })
+            );
+            console.log(newMember);
+          }}
         />
-        <Button variant="contained" onClick={handleOpen} className="addMember">
-          Add member
-        </Button>
+        {user.isAdmin ? (
+          <Button
+            variant="contained"
+            onClick={handleOpen}
+            className="addMember"
+            autoComplete="off"
+          >
+            Add member
+          </Button>
+        ) : (
+          ""
+        )}
+
         <Dialog open={open} onClose={handleClose} fullWidth={true}>
+          <LinearProgress
+            value={100}
+            variant={memberAdded ? "indeterminate" : "determinate"}
+          />
           <DialogTitle textAlign="center">Member Information</DialogTitle>
           <DialogContent>
-            <SelectProfileImage func={setProfileImage} />
+            <SelectProfileImage func={{ item, setItem }} />
 
             <Box
               sx={{
@@ -156,36 +196,29 @@ export const Members = () => {
               autoComplete="off"
             >
               <TextField
-                label="Full name"
+                label="First name"
                 autoComplete="off"
-                error={item.fullName ? false : true}
-                helperText={item.fullName ? "" : "Please enter your full name"}
-                onChange={(e) => setItem({ ...item, fullName: e.target.value })}
-              />
-              {/* <TextField
-                label="Age"
-                autoComplete="off"
-                error={
-                  !item.age ||
-                  item.age < 16 ||
-                  item.age > 50 ||
-                  !!item.age.match(/[a-zA-z]/)
-                    ? true
-                    : false
-                }
+                error={item.firstName ? false : true}
                 helperText={
-                  !item.age ||
-                  item.age < 16 ||
-                  item.age > 50 ||
-                  !!item.age.match(/[a-zA-z]/)
-                    ? "16 <= Age <= 50"
-                    : ""
+                  item.firstName ? "" : "Please enter your first name"
                 }
-                onChange={(e) => setItem({ ...item, age: e.target.value })}
-              /> */}
+                onBlur={(e) => setItem({ ...item, firstName: e.target.value })}
+              />
+              <TextField
+                label="Last name"
+                autoComplete="off"
+                error={item.lastName ? false : true}
+                helperText={item.lastName ? "" : "Please enter your last name"}
+                onBlur={(e) => setItem({ ...item, lastName: e.target.value })}
+              />
 
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker onChange={(e) => showDate(e.$d)} label="Birthday" />
+                <DatePicker
+                  onChange={(e) =>
+                    setItem({ ...item, birthday: e.$d.toLocaleDateString() })
+                  }
+                  label="Birthday"
+                />
               </LocalizationProvider>
 
               <TextField
@@ -194,56 +227,32 @@ export const Members = () => {
                 type="email"
                 error={item.email ? false : true}
                 helperText={item.email ? "" : "Enter your email"}
-                onChange={(e) => setItem({ ...item, email: e.target.value })}
+                onBlur={(e) => setItem({ ...item, email: e.target.value })}
               />
-              <FormControl error={item.password ? false : true}>
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                        sx={{ marginLeft: "-30px" }}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                  onChange={(e) =>
-                    setItem({ ...item, password: e.target.value })
-                  }
-                />
-                <FormHelperText>
-                  {item.password ? "" : "Enter your password"}
-                </FormHelperText>
-              </FormControl>
 
               <TextField
                 label="Github username"
                 autoComplete="off"
                 error={item.github ? false : true}
                 helperText={item.github ? "" : "Enter your github username"}
-                onChange={(e) => setItem({ ...item, github: e.target.value })}
+                onBlur={(e) =>
+                  setItem({
+                    ...item,
+                    github: e.target.value,
+                    password: Math.random().toString(36).slice(-8),
+                  })
+                }
               />
               <TextField
                 label="LinkedIn username"
                 autoComplete="off"
                 error={item.linkedIn ? false : true}
                 helperText={item.linkedIn ? "" : "Enter your linked username"}
-                onChange={(e) => setItem({ ...item, linkedIn: e.target.value })}
+                onBlur={(e) => setItem({ ...item, linkedIn: e.target.value })}
               />
             </Box>
-            <SelectLanguage func={setLanguage} />
-            <SelectSkill func={setSkill} />
-
+            <SelectLanguage func={{ item, setItem }} />
+            <SelectSkill func={{ item, setItem }} />
             <FormGroup sx={{ marginTop: "10px", width: "fit-content" }}>
               <FormControlLabel
                 control={<Checkbox />}
@@ -256,13 +265,33 @@ export const Members = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={addMember}>Add member</Button>
+            <Button onClick={() => addMember()}>Add member</Button>
           </DialogActions>
+
+          <Dialog open={finalThing} onClose={handleCloseFinalThing}>
+            <DialogContent sx={{ display: "grid", gap: "20px" }}>
+              <Typography>Username: {item.github}</Typography>
+              <Typography>Password: {item.password}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={showUsernamePassword}>Ok</Button>
+            </DialogActions>
+          </Dialog>
         </Dialog>
       </section>
 
       <section className="members" sx={{ margin: "0 auto" }}>
-        <MemberInfo props={{ item, setItem }} />
+        {newMember ? (
+          newMember.map((member, index) => (
+            <MemberInfo
+              key={index}
+              props={{ member }}
+              func={{ deleteMember, editMember }}
+            />
+          ))
+        ) : (
+          <h1>Loading...</h1>
+        )}
       </section>
 
       <Snackbar
@@ -270,8 +299,6 @@ export const Members = () => {
         open={openSnackbar}
         onClose={handleCloseSnackbar}
         autoHideDuration={4000}
-
-        // message="Please check fields and try again"
       >
         <Alert onClose={handleCloseSnackbar} severity="error" variant="filled">
           Please complete all fields and try again

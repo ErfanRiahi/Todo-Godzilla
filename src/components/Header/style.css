@@ -8,11 +8,15 @@ header {
 }
 
 nav {
-  padding: 20px;
+  height: 61px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 ul {
   margin: 0;
+  width: fit-content;
 }
 
 .item {
@@ -45,4 +49,7 @@ ul {
 .item:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+.user {
 }

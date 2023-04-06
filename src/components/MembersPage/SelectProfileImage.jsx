@@ -3,6 +3,7 @@ import { Avatar, Button, FormControl, Tooltip } from "@mui/material";
 import { useState } from "react";
 
 export const SelectProfileImage = (props) => {
+  const item = props.func.item;
   const [imagePreview, setImagePreview] = useState("");
 
   const convertBase64 = async (file) => {
@@ -24,7 +25,7 @@ export const SelectProfileImage = (props) => {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
     setImagePreview(base64);
-    props.func(base64);
+    props.func.setItem({ ...item, profileImage: base64 });
     // profilePhoto?.setValue(base64);
     // imagePreview?.setValue(URL.createObjectURL(event.target.files[0]));
   };
@@ -37,7 +38,7 @@ export const SelectProfileImage = (props) => {
     <FormControl sx={{ display: "flex", alignItems: "center" }}>
       <Avatar
         alt="ProfilePhoto"
-        src={imagePreview}
+        src={imagePreview || item.profileImage}
         sx={{ width: 70, height: 70 }}
       />
       <div>

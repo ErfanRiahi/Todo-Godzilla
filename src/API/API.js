@@ -21,15 +21,35 @@ export async function getAllMember() {
   }
 }
 
-export async function createMember() {
+export async function createMember(item) {
   try {
     const newMember = await axios.post(baseURL + "/members", item);
-    return newMember;
+    return newMember.data;
   } catch (err) {
     console.log(err);
   }
 }
 
+export async function deleteMemberApi(id) {
+  try {
+    const deletedMember = await axios.delete(baseURL + "/members", {
+      data: { id },
+    });
+    console.log(deletedMember);
+    return deletedMember.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function editMemberApi(id, item) {
+  try {
+    const editedMember = await axios.put(baseURL + "/members", { id, item });
+    return editedMember.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
 // ******************** Tasks ******************** //
 export async function getAllTask() {
   try {
