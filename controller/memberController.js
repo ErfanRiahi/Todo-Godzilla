@@ -1,11 +1,12 @@
 const Member = require("../model/Tasks");
+const Item = require("../model/Members");
 
 // @desc - all member
 // @route - GET '/members'
 // @access - public
 const getAllMembers = async (req, res) => {
   try {
-    const members = await Member.find();
+    const members = await Item.find();
     if (!members) return res.status(204).json({ message: "No member found" });
     res.json(members);
   } catch (err) {
@@ -17,16 +18,10 @@ const getAllMembers = async (req, res) => {
 // @route - POST '/members'
 // @access - public
 const createMember = async (req, res) => {
-  const { title, age, linkedIn, github, skill, language } = req?.body;
-  if (!title || !age || !linkedIn || !github || !skill || language)
-    return res.status(400).json({
-      message:
-        "These parameter is required: title, age, linkedIn, github, skill, language",
-    });
+  const item = new Item(req.body);
 
   try {
-    await Member.create({ title, age, linkedIn, github, skill, language });
-    const allMembers = await Member.find();
+    const allMembers = await Item.find();
     res.json(allMembers);
   } catch (err) {
     console.log(err);
@@ -37,25 +32,30 @@ const createMember = async (req, res) => {
 // @route - PUT '/members'
 // @access - public
 const updateMember = async (req, res) => {
-  const { id, title, age, linkedIn, github, skill, language } = req?.body;
+  const { id, item } = req?.body;
   if (!id) return res.status(400).json({ message: "Id parameter is required" });
 
   try {
-    const member = await Member.findOne({ _id: id });
+    let member = await Item.findOne({ _id: id });
+
     if (!member)
       return res
         .status(204)
         .json({ message: `No matches member with id:${id}` });
 
-    if (req.body?.title) member.title = title;
-    if (req.body?.age) member.age = age;
-    if (req.body?.linkedIn) member.linkedIn = linkedIn;
-    if (req.body?.github) member.github = github;
-    if (req.body?.skill) member.skill = skill;
-    if (req.body?.language) member.language = language;
+    member.firstName = item.firstName;
+    member.lastName = item.lastName;
+    member.birthday = item.birthday;
+    member.email = item.email;
+    member.password = item.password;
+    member.github = item.github;
+    member.linkedIn = item.linkedIn;
+    member.language = item.language;
+    member.skill = item.skill;
+    member.profileImage = item.profileImage;
 
     await member.save();
-    const allMembers = await member.find();
+    const allMembers = await Item.find();
     res.json(allMembers);
   } catch (err) {
     console.log(err);
@@ -70,13 +70,13 @@ const deleteMember = async (req, res) => {
   if (!id) return res.status(400).json({ message: "id parameter is required" });
 
   try {
-    const member = Member.findOne({ _id: id });
+    const member = Item.findOne({ _id: id });
     if (!member)
       return res
         .status(204)
         .json({ message: `no matches member with id:${id}` });
     await member.deleteOne();
-    const allMembers = await Member.find();
+    const allMembers = await Item.find();
     res.json(allMembers);
   } catch (err) {
     console.log(err);

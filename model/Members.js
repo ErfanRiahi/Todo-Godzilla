@@ -1,25 +1,41 @@
 const mongoose = require("mongoose");
 
 const MemberSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'field "title" is required'],
+    // required: [true, 'field "title" is required'],
   },
-  age: {
-    type: number,
+  lastName: {
+    type: String,
+  },
+  birthday: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  password: {
+    type: String,
+  },
+  github: {
+    type: String,
   },
   linkedIn: {
     type: String,
   },
-  gitHub: {
-    type: String,
+  language: {
+    type: Array,
   },
   skill: {
     type: Array,
   },
-  language: {
-    type: Array,
+  isAdmin: {
+    type: Boolean,
+  },
+  profileImage: {
+    type: String,
   },
 });
 
-module.exports = mongoose.model("Member", MemberSchema);
+const Item = mongoose.model("Member", MemberSchema);
+module.exports = Item;
