@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema({
+  taskId: {
+    type: Number,
+  },
   title: {
     type: String,
     // maxLength: [15, "maximum length is 15 characters"],
