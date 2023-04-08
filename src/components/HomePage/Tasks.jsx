@@ -24,11 +24,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { deleteTaskApi, editTaskApi } from "../../API/API";
+import { AppContexts } from "../../contexts/AppContexts";
 import { SelectPerson } from "./SelectPerson";
 
 export const Tasks = (props) => {
+  const { user, setUser } = useContext(AppContexts);
   const task = props.props.task;
   const allMembers = props.props.allMembers;
   const allTasks = props.props.allTasks;
@@ -137,13 +139,21 @@ export const Tasks = (props) => {
         <Box textAlign="center">
           <IconButton
             aria-label="delete"
-            sx={checked ? { display: "none" } : { display: "inline-block" }}
+            sx={
+              checked || !user.isAdmin
+                ? { display: "none" }
+                : { display: "inline-block" }
+            }
             onClick={handleOpenEditDialog}
           >
             <Edit sx={{ color: "blue" }} />
           </IconButton>
           <IconButton
-            sx={checked ? { display: "none" } : { display: "inline-block" }}
+            sx={
+              checked || !user.isAdmin
+                ? { display: "none" }
+                : { display: "inline-block" }
+            }
             onClick={(e) => {
               setCompletingTask(true);
               deleteTask();

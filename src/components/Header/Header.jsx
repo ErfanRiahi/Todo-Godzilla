@@ -93,9 +93,7 @@ export const Header = () => {
     allMembers
       ? allMembers.map((member) => {
           if (member.github === usernamePassword.username) {
-            console.log("ok");
             if (member.password === usernamePassword.password) {
-              console.log(member);
               setUser({
                 ...user,
                 username: usernamePassword.username,
@@ -107,7 +105,7 @@ export const Header = () => {
             }
           } else handleClick();
         })
-      : console.log("not found");
+      : "";
   }
 
   return (

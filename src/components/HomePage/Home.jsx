@@ -21,12 +21,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { addTaskApi, getAllMember, getAllTask } from "../../API/API";
 import "../../generalStyle.css";
 import { SelectPerson } from "./SelectPerson";
 import "./style.css";
 import { Tasks } from "./Tasks";
+import { AppContexts } from "../../contexts/AppContexts";
 
 const style = {
   position: "absolute",
@@ -40,6 +41,7 @@ const style = {
 };
 
 export const Home = () => {
+  const { user, setUser } = useContext(AppContexts);
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -131,17 +133,6 @@ export const Home = () => {
         ) : (
           <Typography variant="h4">Loading...</Typography>
         )}
-        {/* <Avatar
-            alt="Erfan"
-            src="../../../src/assets/img/Erfan.jpg"
-            sx={{ width: 70, height: 70 }}
-          />        
-        <Avatar alt="1" src="../../../src/assets/img/1.jpg" />
-        <Avatar alt="2" src="../../../src/assets/img/2.jpg" />
-        <Avatar alt="3" src="../../../src/assets/img/3.jpg" />
-        <Avatar alt="4" src="../../../src/assets/img/4.jpg" />
-        <Avatar alt="5" src="../../../src/assets/img/5.jpg" />
-        <Avatar alt="6" src="../../../src/assets/img/6.jpg" /> */}
       </AvatarGroup>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
@@ -181,13 +172,21 @@ export const Home = () => {
       </Modal>
 
       <div className="add-total">
-        <Button
-          variant="contained"
-          className="addNewTask-btn"
-          onClick={handleOpenAddTask}
-        >
-          Add new task
-        </Button>
+        {user.isAdmin ? (
+          <Button
+            variant="contained"
+            className="addNewTask-btn"
+            onClick={handleOpenAddTask}
+            sx={{ padding: "10px" }}
+          >
+            Add new task
+          </Button>
+        ) : (
+          <Typography sx={{ fontWeight: "bold" }}>
+            Login as Admin to add, edit and delete task
+          </Typography>
+        )}
+
         <Dialog open={addTaskDialog} onClose={handleCloseAddTask} fullWidth>
           <LinearProgress
             value={100}
@@ -235,6 +234,7 @@ export const Home = () => {
             <Button onClick={addTask}>Add task</Button>
           </DialogActions>
         </Dialog>
+
         <div className="total">
           Total tasks: {allTasks ? allTasks.length : ""}
         </div>
