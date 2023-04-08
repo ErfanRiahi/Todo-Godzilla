@@ -31,8 +31,9 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import { AppContexts } from "../../contexts/AppContexts";
 import { SelectLanguage } from "./SelectLanguage";
 import { SelectProfileImage } from "./SelectProfileImage";
 import { SelectSkill } from "./SelectSkill";
@@ -45,7 +46,7 @@ import { SelectSkill } from "./SelectSkill";
 export const MemberInfo = (props) => {
   const [item, setItem] = useState(props.props.member);
   const fullName = `${item.firstName} ${item.lastName}`;
-  console.log(fullName);
+  const { user, setUser } = useContext(AppContexts);
   // console.log(props);
   // console.log(members.props);
   // const github = "ErfanRiahi";
@@ -110,7 +111,11 @@ export const MemberInfo = (props) => {
         )}
         <Typography
           variant="h6"
-          sx={{ justifySelf: "center", whiteSpace: "noWrap" }}
+          sx={{
+            justifySelf: "center",
+            whiteSpace: "noWrap",
+            marginTop: "10px",
+          }}
         >
           {fullName ? fullName : "Unknown"}
         </Typography>
@@ -138,21 +143,24 @@ export const MemberInfo = (props) => {
             </a>
           </Tooltip>
         </div>
-
-        <Button
-          variant="contained"
-          sx={{
-            whiteSpace: "nowrap",
-            width: "80%",
-            margin: "0 auto",
-            marginTop: "5px",
-            padding: "6px 12px",
-            gridColumn: "1/span 2",
-          }}
-          onClick={handleOpen}
-        >
-          Details
-        </Button>
+        {user.isAdmin ? (
+          <Button
+            variant="contained"
+            sx={{
+              whiteSpace: "nowrap",
+              width: "80%",
+              margin: "0 auto",
+              marginTop: "5px",
+              padding: "6px 12px",
+              gridColumn: "1/span 2",
+            }}
+            onClick={handleOpen}
+          >
+            Details
+          </Button>
+        ) : (
+          ""
+        )}
 
         {/****************** Member details ******************/}
         <Dialog open={open} onClose={handleClose} fullWidth>
@@ -324,13 +332,21 @@ export const MemberInfo = (props) => {
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => props.func.deleteMember(item._id)}
-            >
-              Delete
-            </Button>
+            {item.github === "ErfanRiahi" ? (
+              ""
+            ) : (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  props.func.deleteMember(item._id);
+                  handleClose();
+                }}
+              >
+                Delete
+              </Button>
+            )}
+
             <Button
               variant="contained"
               color="success"
@@ -410,7 +426,7 @@ export const MemberInfo = (props) => {
                   autoComplete="off"
                   error={item.github ? false : true}
                   helperText={item.github ? "" : "Enter your github username"}
-                  onBlur={(e) => setItem({ ...item, github: e.target.value })}
+                  onChange={(e) => setItem({ ...item, github: e.target.value })}
                 />
                 <TextField
                   label="LinkedIn username"
@@ -418,7 +434,9 @@ export const MemberInfo = (props) => {
                   autoComplete="off"
                   error={item.linkedIn ? false : true}
                   helperText={item.linkedIn ? "" : "Enter your linked username"}
-                  onBlur={(e) => setItem({ ...item, linkedIn: e.target.value })}
+                  onChange={(e) =>
+                    setItem({ ...item, linkedIn: e.target.value })
+                  }
                 />
               </Box>
               <SelectLanguage func={{ item, setItem }} />
@@ -426,7 +444,12 @@ export const MemberInfo = (props) => {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseEdit}>Cancel</Button>
-              <Button onClick={() => props.func.editMember(item._id, item)}>
+              <Button
+                onClick={() => {
+                  props.func.editMember(item._id, item);
+                  handleCloseEdit();
+                }}
+              >
                 Edit
               </Button>
             </DialogActions>

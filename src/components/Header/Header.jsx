@@ -268,8 +268,17 @@ export const Header = () => {
                   />
                 </FormControl>
 
-                <Typography>Admin username and password</Typography>
-                <Typography textAlign="center">ErfanRiahi - 127317</Typography>
+                <Typography>Main admin username and password</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "20px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography textAlign="center">ErfanRiahi</Typography>
+                  <Typography textAlign="center">p4ejzbi6</Typography>
+                </Box>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>

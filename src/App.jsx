@@ -15,6 +15,7 @@ function App() {
     isAdmin: false,
     login: false,
   });
+
   return (
     <AppContexts.Provider value={{ user, setUser }}>
       <BrowserRouter>

@@ -14,8 +14,8 @@ export async function getAllLanguages() {
 // ******************** Members ******************** //
 export async function getAllMember() {
   try {
-    const members = await axios.get(baseURL + "/members");
-    return members;
+    const res = await axios.get(baseURL + "/members");
+    return res;
   } catch (err) {
     console.log(err);
   }
@@ -23,8 +23,8 @@ export async function getAllMember() {
 
 export async function createMember(item) {
   try {
-    const newMember = await axios.post(baseURL + "/members", item);
-    return newMember.data;
+    const res = await axios.post(baseURL + "/members", item);
+    return res.data;
   } catch (err) {
     console.log(err);
   }
@@ -32,11 +32,10 @@ export async function createMember(item) {
 
 export async function deleteMemberApi(id) {
   try {
-    const deletedMember = await axios.delete(baseURL + "/members", {
+    const res = await axios.delete(baseURL + "/members", {
       data: { id },
     });
-    console.log(deletedMember);
-    return deletedMember.data;
+    return res.data;
   } catch (err) {
     console.log(err);
   }
@@ -44,8 +43,8 @@ export async function deleteMemberApi(id) {
 
 export async function editMemberApi(id, item) {
   try {
-    const editedMember = await axios.put(baseURL + "/members", { id, item });
-    return editedMember.data;
+    const res = await axios.put(baseURL + "/members", { id, item });
+    return res.data;
   } catch (err) {
     console.log(err);
   }
@@ -53,8 +52,35 @@ export async function editMemberApi(id, item) {
 // ******************** Tasks ******************** //
 export async function getAllTask() {
   try {
-    const tasks = await axios.get(baseURL);
-    return tasks;
+    const res = await axios.get(baseURL);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function addTaskApi(task) {
+  try {
+    const res = await axios.post(baseURL, task);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function editTaskApi(id, task) {
+  try {
+    const res = await axios.put(baseURL, { id, task });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function deleteTaskApi(id) {
+  try {
+    const res = await axios.delete(baseURL, { data: { id } });
+    return res.data;
   } catch (err) {
     console.log(err);
   }
