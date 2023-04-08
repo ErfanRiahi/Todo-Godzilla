@@ -17,12 +17,14 @@ const getAllTasks = async (req, res) => {
 // @route - POST '/'
 // @access - public
 const createTask = async (req, res) => {
-  const { title, describe, userId } = req?.body;
-  if (!title || !userId)
-    return res.status(400).json({ message: "title and userId is required" });
+  // const { title, describe, userId } = req?.body;
+  const task = new Task(req.body);
+
+  // if (!title || !userId)
+  //   return res.status(400).json({ message: "title and userId is required" });
 
   try {
-    await Task.create({ title, describe, userId });
+    await Task.create(task);
     const allTasks = await Task.find();
     res.json(allTasks);
   } catch (err) {
@@ -34,19 +36,15 @@ const createTask = async (req, res) => {
 // @route - PUT '/'
 // @access - public
 const updateTask = async (req, res) => {
-  const { id, title, describe, userId } = req?.body;
+  // const { id, title, describe, userId } = req?.body;
+  const { id, task } = req?.body;
   if (!id) return res.status(400).json({ message: "Id parameter is required" });
 
   try {
-    const task = await Task.findOne({ _id: id });
-    if (!task)
+    const updatedTask = await Task.findByIdAndUpdate(id, task);
+    if (!updatedTask)
       return res.status(204).json({ message: `No matches task with id:${id}` });
 
-    if (req.body?.title) task.title = title;
-    if (req.body?.describe) task.describe = describe;
-    if (req.body?.userId) task.userId = userId;
-
-    await task.save();
     const allTasks = await Task.find();
     res.json(allTasks);
   } catch (err) {

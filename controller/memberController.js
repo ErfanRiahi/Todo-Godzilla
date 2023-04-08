@@ -21,6 +21,7 @@ const createMember = async (req, res) => {
   const item = new Item(req.body);
 
   try {
+    await Item.create(item);
     const allMembers = await Item.find();
     res.json(allMembers);
   } catch (err) {
@@ -36,25 +37,25 @@ const updateMember = async (req, res) => {
   if (!id) return res.status(400).json({ message: "Id parameter is required" });
 
   try {
-    let member = await Item.findOne({ _id: id });
-
+    const member = await Item.findByIdAndUpdate(id, item);
+    // let member = await Item.findOne({ _id: id });
     if (!member)
       return res
         .status(204)
         .json({ message: `No matches member with id:${id}` });
 
-    member.firstName = item.firstName;
-    member.lastName = item.lastName;
-    member.birthday = item.birthday;
-    member.email = item.email;
-    member.password = item.password;
-    member.github = item.github;
-    member.linkedIn = item.linkedIn;
-    member.language = item.language;
-    member.skill = item.skill;
-    member.profileImage = item.profileImage;
+    // member.firstName = item.firstName;
+    // member.lastName = item.lastName;
+    // member.birthday = item.birthday;
+    // member.email = item.email;
+    // member.password = item.password;
+    // member.github = item.github;
+    // member.linkedIn = item.linkedIn;
+    // member.language = item.language;
+    // member.skill = item.skill;
+    // member.profileImage = item.profileImage;
 
-    await member.save();
+    // await member.save();
     const allMembers = await Item.find();
     res.json(allMembers);
   } catch (err) {
