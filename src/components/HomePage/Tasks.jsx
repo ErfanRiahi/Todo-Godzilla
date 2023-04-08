@@ -89,9 +89,7 @@ export const Tasks = (props) => {
   return task ? (
     <TableRow sx={checked ? { opacity: "0.5" } : { opacity: "1" }}>
       <TableCell align="center" width="50px">
-        <Typography sx={{ fontWeight: "bold" }}>
-          {props.props.index + 1}
-        </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{task.taskId}</Typography>
         <Divider orientation="vertical" flexItem />
       </TableCell>
       <TableCell sx={{ width: "80%" }}>

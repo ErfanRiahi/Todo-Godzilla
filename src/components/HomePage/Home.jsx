@@ -43,6 +43,7 @@ const style = {
 export const Home = () => {
   const { user, setUser } = useContext(AppContexts);
   const [task, setTask] = useState({
+    taskId: 0,
     title: "",
     description: "",
     person: [],
@@ -54,7 +55,16 @@ export const Home = () => {
 
   const [addTaskDialog, setAddTaskDialog] = useState(false);
   const handleOpenAddTask = () => setAddTaskDialog(true);
-  const handleCloseAddTask = () => setAddTaskDialog(false);
+  const handleCloseAddTask = () => {
+    setAddTaskDialog(false);
+    setTask({
+      taskId: 0,
+      title: "",
+      description: "",
+      person: [],
+      completed: false,
+    });
+  };
 
   const [taskAdded, setTaskAdded] = useState(false);
 
@@ -99,7 +109,7 @@ export const Home = () => {
     setTaskAdded(true);
     const addedTask = await addTaskApi(task);
     if (addedTask) {
-      setTask(addedTask);
+      setAllTasks(addedTask);
       handleCloseAddTask();
       setTaskAdded(false);
     }
@@ -202,6 +212,10 @@ export const Home = () => {
               className="memberInfo"
               autoComplete="off"
             >
+              <Typography sx={{ marginBottom: "10px" }}>
+                Task ID: {allTasks ? allTasks.length + 1 : ""}
+              </Typography>
+
               <TextField
                 fullWidth
                 autoComplete="off"
@@ -209,7 +223,13 @@ export const Home = () => {
                 label="Title"
                 error={task.title ? false : true}
                 helperText={task.title ? "" : "Write a title for this task"}
-                onBlur={(e) => setTask({ ...task, title: e.target.value })}
+                onBlur={(e) => {
+                  setTask({
+                    ...task,
+                    title: e.target.value,
+                    taskId: allTasks ? allTasks.length + 1 : 0,
+                  });
+                }}
               />
               <TextField
                 fullWidth
@@ -226,7 +246,7 @@ export const Home = () => {
                   setTask({ ...task, description: e.target.value })
                 }
               />
-              <SelectPerson props={{ task, allTasks, allMembers }} />
+              <SelectPerson props={{ task, allTasks, allMembers, setTask }} />
             </Box>
           </DialogContent>
           <DialogActions>
