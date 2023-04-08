@@ -51,5 +51,8 @@ ul {
   transform-origin: bottom left;
 }
 
-.user {
+@media (width <= 580px) {
+  .username {
+    display: none;
+  }
 }

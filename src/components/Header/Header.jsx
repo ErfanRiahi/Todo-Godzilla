@@ -91,22 +91,21 @@ export const Header = () => {
   }, []);
 
   function checkLogin() {
-    allMembers
-      ? allMembers.map((member) => {
-          if (member.github === usernamePassword.username) {
-            if (member.password === usernamePassword.password) {
-              setUser({
-                ...user,
-                username: usernamePassword.username,
-                password: usernamePassword.password,
-                login: true,
-                profileImage: member.profileImage,
-                isAdmin: member.isAdmin,
-              });
-            }
-          } else handleClick();
-        })
-      : "";
+    if (allMembers)
+      allMembers.map((member) => {
+        if (member.github === usernamePassword.username) {
+          if (member.password === usernamePassword.password) {
+            setUser({
+              ...user,
+              username: usernamePassword.username,
+              password: usernamePassword.password,
+              login: true,
+              profileImage: member.profileImage,
+              isAdmin: member.isAdmin,
+            });
+          }
+        } else handleClick();
+      });
   }
 
   return (
@@ -154,13 +153,12 @@ export const Header = () => {
                 marginRight: "20px",
               }}
             >
-              {useMediaQuery("(min-width:580px)") ? (
-                <Typography sx={{ fontWeight: "bold", marginTop: "3px" }}>
-                  {user.username}
-                </Typography>
-              ) : (
-                ""
-              )}
+              <Typography
+                sx={{ fontWeight: "bold", marginTop: "3px" }}
+                className="username"
+              >
+                {user.username}
+              </Typography>
 
               <IconButton
                 onClick={handleClickProfile}

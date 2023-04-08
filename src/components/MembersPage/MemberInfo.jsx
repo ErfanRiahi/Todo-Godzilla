@@ -41,7 +41,7 @@ import { SelectProfileImage } from "./SelectProfileImage";
 import { SelectSkill } from "./SelectSkill";
 
 export const MemberInfo = (props) => {
-  const { user, setUser } = useContext(AppContexts);
+  const { user } = useContext(AppContexts);
   const [item, setItem] = useState(props.props.member);
   const fullName = `${item.firstName} ${item.lastName}`;
   const [memberEdited, setMemberEdited] = useState(false);
