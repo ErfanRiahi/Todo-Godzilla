@@ -5,6 +5,7 @@ import {
   Badge,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,7 +23,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { addTaskApi, getAllMember, getAllTask } from "../../API/API";
+import {
+  addTaskApi,
+  addToHistoryApi,
+  getAllMember,
+  getAllTask,
+} from "../../API/API";
 import "../../generalStyle.css";
 import { SelectPerson } from "./SelectPerson";
 import "./style.css";
@@ -42,6 +48,7 @@ const style = {
 
 export const Home = () => {
   const { user, setUser } = useContext(AppContexts);
+  const [showProfileImage, setShowProfileImage] = useState(false);
   const [task, setTask] = useState({
     taskId: 0,
     title: "",
@@ -102,6 +109,14 @@ export const Home = () => {
 
   // ******************** Add member ******************** //
   const addTask = async () => {
+    const history = {
+      taskId: task.taskId,
+      typeOfModification: "Added",
+      username: user.username,
+      dataTime: new Date().toLocaleString(),
+    };
+    await addToHistoryApi(history);
+
     if (!task.title || !task.description || !task.person.length) {
       handleClick();
       return;
@@ -128,7 +143,7 @@ export const Home = () => {
         }}
         onClick={handleOpen}
       >
-        {adminMember ? (
+        {allMembers ? (
           adminMember.map((member, index) => {
             return member.isAdmin ? (
               <Avatar
@@ -141,7 +156,7 @@ export const Home = () => {
             );
           })
         ) : (
-          <Typography variant="h4">Loading...</Typography>
+          <CircularProgress variant="indeterminate" />
         )}
       </AvatarGroup>
       <Modal open={open} onClose={handleClose}>
@@ -267,7 +282,14 @@ export const Home = () => {
               allTasks.map((task, index) => (
                 <Tasks
                   key={index}
-                  props={{ task, index, allMembers, setAllTasks, allTasks }}
+                  props={{
+                    task,
+                    index,
+                    allMembers,
+                    setAllTasks,
+                    allTasks,
+                    setTask,
+                  }}
                 />
               ))
             ) : (

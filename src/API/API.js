@@ -85,3 +85,23 @@ export async function deleteTaskApi(id) {
     console.log(err);
   }
 }
+
+// ******************** Histories ******************** //
+export async function getAllHistoriesApi() {
+  try {
+    const res = await axios.get(baseURL + "/history");
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function addToHistoryApi(history) {
+  try {
+    const res = await axios.post(baseURL + "/history", history);
+    return res.data;
+    ("");
+  } catch (err) {
+    console.log(err);
+  }
+}

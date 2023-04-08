@@ -20,6 +20,7 @@ import {
   Snackbar,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext, useEffect, useState } from "react";
@@ -145,17 +146,28 @@ export const Header = () => {
         </ul>
         {user.login ? (
           <>
-            <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "bold", marginTop: "3px" }}>
-                {user.username}
-              </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              {useMediaQuery("(min-width:580px)") ? (
+                <Typography sx={{ fontWeight: "bold", marginTop: "3px" }}>
+                  {user.username}
+                </Typography>
+              ) : (
+                ""
+              )}
+
               <IconButton
                 onClick={handleClickProfile}
                 size="small"
                 aria-controls={openMenu ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={openMenu ? "true" : undefined}
-                sx={{ marginRight: "20px" }}
               >
                 {user.profileImage ? (
                   <Avatar alt="profileImage" src={user.profileImage} />
@@ -163,7 +175,6 @@ export const Header = () => {
                   <Person
                     sx={{
                       fontSize: "1.8rem",
-                      marginRight: "20px",
                       alignItems: "center",
                     }}
                   />
@@ -193,12 +204,6 @@ export const Header = () => {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={handleCloseProfile}>
-                <Avatar /> Profile
-              </MenuItem>
-
-              <Divider />
-
               <MenuItem onClick={logout}>
                 <ListItemIcon>
                   <Logout fontSize="small" />

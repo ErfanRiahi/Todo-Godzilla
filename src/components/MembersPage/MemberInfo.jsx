@@ -27,22 +27,25 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  LinearProgress,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getAllTask } from "../../API/API";
+import { deleteMemberApi, editMemberApi, getAllTask } from "../../API/API";
 import { AppContexts } from "../../contexts/AppContexts";
 import { SelectLanguage } from "./SelectLanguage";
 import { SelectProfileImage } from "./SelectProfileImage";
 import { SelectSkill } from "./SelectSkill";
 
 export const MemberInfo = (props) => {
+  const { user, setUser } = useContext(AppContexts);
   const [item, setItem] = useState(props.props.member);
   const fullName = `${item.firstName} ${item.lastName}`;
-  const { user, setUser } = useContext(AppContexts);
+  const [memberEdited, setMemberEdited] = useState(false);
+  const [memberDeleted, setMemberDeleted] = useState(false);
 
   // ******************** Member information dialog ******************** //
   const [open, setOpen] = useState(false);
@@ -95,8 +98,30 @@ export const MemberInfo = (props) => {
     ].join(" ");
     return birthday;
   }
-
   const [valueOfDate, setValueOfDate] = useState(dayjs(item.birthday));
+
+  // ******************** Delete member ******************** //
+  const deleteMember = async () => {
+    const memberDeleteRes = await deleteMemberApi(item._id);
+    if (memberDeleteRes) {
+      props.props.setNewMember(memberDeleteRes);
+      props.props.setAllMembers(memberDeleteRes);
+      setMemberDeleted(false);
+      handleClose();
+    }
+  };
+
+  // ******************** Edit member ******************** //
+  const editMember = async (id, item) => {
+    const memberEditRes = await editMemberApi(id, item);
+    if (memberEditRes) {
+      props.props.setNewMember(memberEdited);
+      props.props.setAllMembers(memberEdited);
+      setMemberEdited(false);
+      handleCloseEdit();
+    }
+  };
+
   return (
     <Card className="card">
       <CardContent
@@ -158,7 +183,7 @@ export const MemberInfo = (props) => {
             </a>
           </Tooltip>
         </div>
-        {user.isAdmin ? (
+        {user.isAdmin || user.username === item.github ? (
           <Button
             variant="contained"
             sx={{
@@ -179,6 +204,10 @@ export const MemberInfo = (props) => {
 
         {/****************** Member details ******************/}
         <Dialog open={open} onClose={handleClose} fullWidth>
+          <LinearProgress
+            value={100}
+            variant={memberDeleted ? "indeterminate" : "determinate"}
+          />
           <DialogContent>
             <Box sx={{ display: "grid", gridTemplateColumns: "auto auto" }}>
               {/****************** photo - fullName - birthday ******************/}
@@ -349,19 +378,19 @@ export const MemberInfo = (props) => {
             </Box>
           </DialogContent>
           <DialogActions>
-            {item.github === "ErfanRiahi" ? (
-              ""
-            ) : (
+            {user.username === "ErfanRiahi" ? (
               <Button
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  props.func.deleteMember(item._id);
-                  handleClose();
+                  deleteMember();
+                  setMemberDeleted(true);
                 }}
               >
                 Delete
               </Button>
+            ) : (
+              ""
             )}
 
             <Button
@@ -373,10 +402,10 @@ export const MemberInfo = (props) => {
             </Button>
           </DialogActions>
           <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth={true}>
-            {/* <LinearProgress
+            <LinearProgress
               value={100}
-              variant={memberAdded ? "indeterminate" : "terminate"}
-            /> */}
+              variant={memberEdited ? "indeterminate" : "determinate"}
+            />
             <DialogTitle textAlign="center">Member Information</DialogTitle>
             <DialogContent>
               <SelectProfileImage func={{ item, setItem }} />
@@ -463,8 +492,8 @@ export const MemberInfo = (props) => {
               <Button onClick={handleCloseEdit}>Cancel</Button>
               <Button
                 onClick={() => {
-                  props.func.editMember(item._id, item);
-                  handleCloseEdit();
+                  editMember(item._id, item);
+                  setMemberEdited(true);
                 }}
               >
                 Edit

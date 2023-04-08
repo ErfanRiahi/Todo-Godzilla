@@ -110,21 +110,11 @@ export const Members = () => {
     const newMember = await createMember(item);
     if (newMember !== undefined) {
       // console.log(newMember);
+      setNewMember(newMember);
       setAllMembers(newMember);
       setMemberAdded(false);
       handleOpenFinalThing();
     }
-  };
-
-  // ******************** Delete member ******************** //
-  const deleteMember = async (id) => {
-    setAllMembers(await deleteMemberApi(id));
-  };
-
-  // ******************** Edit member ******************** //
-  const editMember = async (id, item) => {
-    // console.log(id, item);
-    setAllMembers(await editMemberApi(id, item));
   };
 
   // ******************** Show username and password ******************** //
@@ -144,6 +134,7 @@ export const Members = () => {
           id="outline-required"
           label="Search member..."
           className="searchMember"
+          autoComplete="off"
           onInput={(e) => {
             setNewMember(
               allMembers.filter((member) => {
@@ -160,7 +151,6 @@ export const Members = () => {
                 );
               })
             );
-            console.log(newMember);
           }}
         />
         {user.isAdmin ? (
@@ -169,11 +159,14 @@ export const Members = () => {
             onClick={handleOpen}
             className="addMember"
             autoComplete="off"
+            sx={{ padding: "15px" }}
           >
             Add member
           </Button>
         ) : (
-          ""
+          <Typography sx={{ fontWeight: "bold" }}>
+            Login as admin to add member
+          </Typography>
         )}
 
         <Dialog open={open} onClose={handleClose} fullWidth={true}>
@@ -285,8 +278,7 @@ export const Members = () => {
           newMember.map((member, index) => (
             <MemberInfo
               key={index}
-              props={{ member }}
-              func={{ deleteMember, editMember }}
+              props={{ member, setNewMember, setAllMembers }}
             />
           ))
         ) : (
