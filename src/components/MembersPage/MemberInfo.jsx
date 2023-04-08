@@ -31,37 +31,52 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { getAllTask } from "../../API/API";
 import { AppContexts } from "../../contexts/AppContexts";
 import { SelectLanguage } from "./SelectLanguage";
 import { SelectProfileImage } from "./SelectProfileImage";
 import { SelectSkill } from "./SelectSkill";
 
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: "#fff",
-//   textAlign: "center",
-// }));
-
 export const MemberInfo = (props) => {
   const [item, setItem] = useState(props.props.member);
   const fullName = `${item.firstName} ${item.lastName}`;
   const { user, setUser } = useContext(AppContexts);
+
+  // ******************** Member information dialog ******************** //
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   // console.log(props);
   // console.log(members.props);
   // const github = "ErfanRiahi";
   // const linkedIn = "erfan-riahi";
   // const language = ["Persian", "English", "French"];
   // const skills = ["HTML", "CSS", "JavaScript", "react"];
-  const tasks = [
-    { title: "design header", completed: false },
-    { title: "complete home page", completed: true },
-    { title: "buy bread", completed: false },
-    { title: "take a shower", completed: false },
-  ];
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const tasks = [
+  //   { title: "design header", completed: false },
+  //   { title: "complete home page", completed: true },
+  //   { title: "buy bread", completed: false },
+  //   { title: "take a shower", completed: false },
+  // ];
+
+  const tasks = [];
+
+  const [allTasks, setAllTasks] = useState();
+  useEffect(() => {
+    getAllTask().then((data) => setAllTasks(data.data));
+  }, []);
+  allTasks
+    ? allTasks.map((task) =>
+        task.person.includes(fullName)
+          ? tasks.push({ title: task.title, completed: task.completed })
+          : ""
+      )
+    : console.log("wait!!!");
+
+  // console.log(tasks);
 
   // ******************** Edit dialog ******************** //
   const [openEdit, setOpenEdit] = useState(false);
@@ -308,26 +323,28 @@ export const MemberInfo = (props) => {
                 <Tooltip title={tasks.length > 1 ? "Tasks" : "Task"} arrow>
                   <Assignment sx={{ fontSize: "2rem", marginRight: "10px" }} />
                 </Tooltip>
-                {tasks.map((task, index) => {
-                  return (
-                    <Typography
-                      key={index}
-                      sx={{
-                        boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
-                        padding: "5px",
-                        borderRadius: "4px",
-                        color: "white",
-                        marginRight: "8px",
-                        marginY: "5px",
-                      }}
-                      backgroundColor={
-                        task.completed ? "green" : "rgb(255,80,80)"
-                      }
-                    >
-                      {task.title}
-                    </Typography>
-                  );
-                })}
+                {tasks
+                  ? tasks.map((task, index) => {
+                      return (
+                        <Typography
+                          key={index}
+                          sx={{
+                            boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
+                            padding: "5px",
+                            borderRadius: "4px",
+                            color: "white",
+                            marginRight: "8px",
+                            marginY: "5px",
+                          }}
+                          backgroundColor={
+                            task.completed ? "green" : "rgb(255,80,80)"
+                          }
+                        >
+                          {task.title}
+                        </Typography>
+                      );
+                    })
+                  : console.log("Wait more!!")}
               </Box>
             </Box>
           </DialogContent>
