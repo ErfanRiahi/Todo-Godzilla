@@ -295,7 +295,7 @@ export const Home = () => {
             ) : (
               <TableRow>
                 <TableCell>
-                  <Typography variant="h4">Loading...</Typography>
+                  <CircularProgress variant="indeterminate" />
                 </TableCell>
               </TableRow>
             )}
