@@ -34,6 +34,7 @@ import { SelectPerson } from "./SelectPerson";
 import "./style.css";
 import { Tasks } from "./Tasks";
 import { AppContexts } from "../../contexts/AppContexts";
+import { Functions, TaskAlt } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -270,9 +271,24 @@ export const Home = () => {
           </DialogActions>
         </Dialog>
 
-        <div className="total">
-          Total tasks: {allTasks ? allTasks.length : ""}
-        </div>
+        {/* <div className="total"> */}
+        <Typography
+          sx={{
+            display: "flex",
+            gap: "5px",
+            backgroundColor: "antiquewhite",
+            padding: "12px",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+            alignItems: "center",
+            borderRadius: "5px",
+          }}
+        >
+          <span className="totalTasks">Total tasks:</span>
+          <Functions className="totalTasksIcon" />{" "}
+          {allTasks ? allTasks.length : ""}
+        </Typography>
+        {/* </div> */}
       </div>
 
       <TableContainer component={Paper} sx={{ marginTop: "40px" }}>

@@ -217,7 +217,7 @@ export const Header = () => {
                 padding: "0",
                 lineHeight: "0",
                 fontWeight: "900",
-                marginRight: "20px",
+                marginRight: "5px",
               }}
               onClick={handleOpen}
             >

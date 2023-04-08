@@ -26,3 +26,16 @@
   padding: 14px;
   border-radius: 5px;
 }
+
+.totalTasksIcon {
+  display: none !important;
+}
+
+@media (width < 580px) {
+  .totalTasks {
+    display: none;
+  }
+  .totalTasksIcon {
+    display: inline-block !important;
+  }
+}
