@@ -3,6 +3,7 @@ import "../../generalStyle.css";
 import { useEffect, useState } from "react";
 import { getAllHistoriesApi } from "../../API/API";
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -32,7 +33,7 @@ export const History = () => {
             ) : (
               <TableRow>
                 <TableCell>
-                  <Typography>Loading...</Typography>
+                  <CircularProgress variant="indeterminate" />
                 </TableCell>
               </TableRow>
             )}

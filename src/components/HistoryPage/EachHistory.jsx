@@ -17,8 +17,10 @@ export const EachHistory = ({ props }) => {
       </TableCell>
       <TableCell>
         <Typography>
-          The task {props?.taskId} has been {props?.typeOfModification} by{" "}
-          {props?.username} at {props?.dataTime}
+          The <strong>task {props?.taskId}</strong> has been{" "}
+          <strong>{props?.typeOfModification}</strong> by{" "}
+          <strong>{props?.username}</strong> at{" "}
+          <strong>{props?.dataTime}</strong>
         </Typography>
       </TableCell>
     </TableRow>

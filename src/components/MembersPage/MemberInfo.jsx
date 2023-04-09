@@ -144,10 +144,12 @@ export const MemberInfo = (props) => {
             sx={{ width: 60, height: 60 }}
           />
         </Badge>
-        {item.isAdmin ? (
-          <SupervisorAccount sx={{ fontSize: "2.2rem", justifySelf: "end" }} />
+        {tasks.filter((task) => !task.completed).length >= 3 ? (
+          <Lightbulb
+            sx={{ fontSize: "2.2rem", justifySelf: "end", color: "red" }}
+          />
         ) : (
-          <Lightbulb sx={{ fontSize: "2.2rem", justifySelf: "end" }} />
+          <Typography></Typography>
         )}
         <Typography
           variant="h6"
