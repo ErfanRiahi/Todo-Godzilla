@@ -6,7 +6,8 @@ export const SelectLanguage = (props) => {
   const item = props.func.item;
 
   const [languages, setLanguages] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState(item.language);
+  const [oldLanguage, setOldLanguage] = useState(item.language);
 
   useEffect(() => {
     getAllLanguages().then((countries) =>
@@ -35,6 +36,7 @@ export const SelectLanguage = (props) => {
       }}
       options={languages}
       getOptionLabel={(option) => option}
+      defaultValue={oldLanguage}
       renderInput={(params) => (
         <TextField
           error={

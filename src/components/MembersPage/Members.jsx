@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -126,7 +127,6 @@ export const Members = () => {
     handleClose();
   }
 
-  // console.log(newMember);
   return (
     <main>
       <section className="search-add">
@@ -137,19 +137,11 @@ export const Members = () => {
           autoComplete="off"
           onInput={(e) => {
             setNewMember(
-              allMembers.filter((member) => {
-                // `${member.firstName} ${member.lastName}`.includes(
-                //   e.target.value
-                // )
-                // console.log(
-                //   `${member.firstName} ${member.lastName}`.includes(
-                //     e.target.value
-                //   )
-                // );
-                return `${member.firstName} ${member.lastName}`.includes(
+              allMembers.filter((member) =>
+                `${member.firstName} ${member.lastName}`.includes(
                   e.target.value
-                );
-              })
+                )
+              )
             );
           }}
         />
@@ -282,7 +274,7 @@ export const Members = () => {
             />
           ))
         ) : (
-          <h1>Loading...</h1>
+          <CircularProgress variant="indeterminate" />
         )}
       </section>
 

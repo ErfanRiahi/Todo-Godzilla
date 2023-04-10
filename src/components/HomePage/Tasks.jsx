@@ -47,7 +47,16 @@ export const Tasks = (props) => {
   // ******************** Edit dialog ******************** //
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const handleOpenEditDialog = () => setOpenEditDialog(true);
-  const handleCloseEditDialog = () => setOpenEditDialog(false);
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setTask({
+      taskId: 0,
+      title: "",
+      description: "",
+      person: [],
+      completed: false,
+    });
+  };
 
   const profilePhoto = [];
   let personGithubId;

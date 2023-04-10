@@ -7,15 +7,17 @@ export const SelectPerson = (props) => {
   const [selectedPerson, setSelectedPerson] = useState([]);
   const [allMembers, setAllMembers] = useState();
   const persons = [];
+  const [oldPersons, setOldPersons] = useState(task.person);
+
   useEffect(() => {
     getAllMember().then((data) => setAllMembers(data.data));
   }, []);
 
-  allMembers
-    ? allMembers.map((member) =>
-        persons.push(`${member.firstName} ${member.lastName}`)
-      )
-    : "";
+  if (allMembers) {
+    allMembers.map((member) =>
+      persons.push(`${member.firstName} ${member.lastName}`)
+    );
+  }
 
   return (
     <Autocomplete
@@ -27,6 +29,7 @@ export const SelectPerson = (props) => {
       }}
       options={persons ? persons : ""}
       getOptionLabel={(option) => option}
+      defaultValue={oldPersons}
       renderInput={(params) => (
         <TextField
           {...params}

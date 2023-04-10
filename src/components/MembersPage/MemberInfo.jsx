@@ -71,15 +71,11 @@ export const MemberInfo = (props) => {
   useEffect(() => {
     getAllTask().then((data) => setAllTasks(data.data));
   }, []);
-  allTasks
-    ? allTasks.map((task) =>
-        task.person.includes(fullName)
-          ? tasks.push({ title: task.title, completed: task.completed })
-          : ""
-      )
-    : console.log("wait!!!");
-
-  // console.log(tasks);
+  allTasks?.map((task) =>
+    task.person.includes(fullName)
+      ? tasks.push({ title: task.title, completed: task.completed })
+      : ""
+  );
 
   // ******************** Edit dialog ******************** //
   const [openEdit, setOpenEdit] = useState(false);
@@ -354,28 +350,26 @@ export const MemberInfo = (props) => {
                 <Tooltip title={tasks.length > 1 ? "Tasks" : "Task"} arrow>
                   <Assignment sx={{ fontSize: "2rem", marginRight: "10px" }} />
                 </Tooltip>
-                {tasks
-                  ? tasks.map((task, index) => {
-                      return (
-                        <Typography
-                          key={index}
-                          sx={{
-                            boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
-                            padding: "5px",
-                            borderRadius: "4px",
-                            color: "white",
-                            marginRight: "8px",
-                            marginY: "5px",
-                          }}
-                          backgroundColor={
-                            task.completed ? "green" : "rgb(255,80,80)"
-                          }
-                        >
-                          {task.title}
-                        </Typography>
-                      );
-                    })
-                  : console.log("Wait more!!")}
+                {tasks?.map((task, index) => {
+                  return (
+                    <Typography
+                      key={index}
+                      sx={{
+                        boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        color: "white",
+                        marginRight: "8px",
+                        marginY: "5px",
+                      }}
+                      backgroundColor={
+                        task.completed ? "green" : "rgb(255,80,80)"
+                      }
+                    >
+                      {task.title}
+                    </Typography>
+                  );
+                })}
               </Box>
             </Box>
           </DialogContent>

@@ -10,7 +10,9 @@ import { skills } from "./skills";
 
 export const SelectSkill = (props) => {
   const item = props.func.item;
-  const [selectedSkill, setSelectedSkill] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState(item.skill);
+  const [oldSkills, setOldSkills] = useState(item.skill);
+
   return (
     <Autocomplete
       multiple
@@ -22,6 +24,7 @@ export const SelectSkill = (props) => {
       }}
       options={skills}
       getOptionLabel={(option) => option}
+      defaultValue={oldSkills}
       renderInput={(params) => (
         <TextField
           error={
