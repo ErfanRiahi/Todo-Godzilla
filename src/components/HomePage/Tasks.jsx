@@ -9,16 +9,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   FormControlLabel,
   FormGroup,
   IconButton,
   LinearProgress,
-  Modal,
-  Table,
-  TableBody,
   TableCell,
-  TableContainer,
   TableRow,
   TextField,
   Typography,
@@ -123,6 +118,7 @@ export const Tasks = (props) => {
         <Typography sx={{ fontWeight: "bold" }}>{task.taskId}</Typography>
       </TableCell>
       {useMediaQuery("(width < 580px)") ? (
+        // ************* if width of screen less than 580px *************
         <TableCell sx={{ width: "80%" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
             {task.title}
@@ -253,6 +249,7 @@ export const Tasks = (props) => {
           </Dialog>
         </TableCell>
       ) : (
+        // ************* if width of screen greater than 580px *************
         <>
           <TableCell sx={{ width: "80%" }}>
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
