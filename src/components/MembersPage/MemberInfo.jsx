@@ -19,7 +19,7 @@ export const MemberInfo = (props) => {
   const [item, setItem] = useState(props.props.member);
   const { setNewMember, setAllMembers } = props.props;
   const fullName = `${item.firstName} ${item.lastName}`;
-
+  // console.log(item);
   const [allTasks, setAllTasks] = useState();
 
   // ******************** Member information dialog ******************** //

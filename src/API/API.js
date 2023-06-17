@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseURL = "https://todo-godzilla.onrender.com";
+// const baseURL = "https://todo-godzilla.onrender.com";
+const baseURL = "http://localhost:5000";
 
 export async function getAllLanguages() {
   try {

@@ -135,7 +135,7 @@ export const Members = () => {
           label="Search member..."
           className="searchMember"
           autoComplete="off"
-          onInput={(e) => {
+          onBlur={(e) => {
             setNewMember(
               allMembers.filter((member) =>
                 `${member.firstName} ${member.lastName}`.includes(
@@ -143,6 +143,7 @@ export const Members = () => {
                 )
               )
             );
+            // console.log(newMember);
           }}
         />
         {user.isAdmin ? (
@@ -267,12 +268,14 @@ export const Members = () => {
 
       <section className="members" sx={{ margin: "0 auto" }}>
         {newMember ? (
-          newMember.map((member, index) => (
-            <MemberInfo
-              key={index}
-              props={{ member, setNewMember, setAllMembers }}
-            />
-          ))
+          newMember.map((member, index) => {
+            return (
+              <MemberInfo
+                key={index}
+                props={{ member, setNewMember, setAllMembers }}
+              />
+            );
+          })
         ) : (
           <CircularProgress variant="indeterminate" />
         )}

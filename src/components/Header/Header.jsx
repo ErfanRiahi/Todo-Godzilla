@@ -13,6 +13,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  LinearProgress,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -35,6 +36,7 @@ export const Header = () => {
     username: "",
     password: "",
   });
+  const [loginStatus, setLoginStatus] = useState(false);
 
   // ******************** Login dialog ******************** //
   const [open, setOpen] = useState(false);
@@ -91,6 +93,7 @@ export const Header = () => {
   }, []);
 
   function checkLogin() {
+    setLoginStatus(true);
     if (allMembers)
       allMembers.map((member) => {
         if (member.github === usernamePassword.username) {
@@ -103,6 +106,7 @@ export const Header = () => {
               profileImage: member.profileImage,
               isAdmin: member.isAdmin,
             });
+            setLoginStatus(false);
           }
         } else handleClick();
       });
@@ -224,6 +228,10 @@ export const Header = () => {
               Login
             </Button>
             <Dialog open={open} onClose={handleClose}>
+              <LinearProgress
+                value={100}
+                variant={loginStatus ? "indeterminate" : "determinate"}
+              />
               <DialogTitle textAlign="center" sx={{ paddingBottom: "0" }}>
                 Login
               </DialogTitle>
