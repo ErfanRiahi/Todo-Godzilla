@@ -35,6 +35,9 @@ const MemberSchema = new mongoose.Schema({
   profileImage: {
     type: String,
   },
+  tasks: {
+    type: Array,
+  },
 });
 
 const Item = mongoose.model("Member", MemberSchema);
